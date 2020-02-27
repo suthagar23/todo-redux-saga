@@ -1,7 +1,12 @@
-import { TODO_TITLE_REQUIRED, ADD_TODO, FETCH_TODO_FROM_API } from './constants';
+import {
+  TODO_TITLE_REQUIRED,
+  ADD_TODO,
+  FETCH_TODO_FROM_API,
+  COUNT_TOTAL_USERS,
+} from './constants';
 import uuid from 'uuid';
 
-export function addToDo(payload) {
+export const addToDo = (payload) => {
   const { title } = payload;
   if (!title ) {
     return { type: TODO_TITLE_REQUIRED, payload };
@@ -11,3 +16,5 @@ export function addToDo(payload) {
 }
 
 export const addToDoFromApi = () => ({ type: FETCH_TODO_FROM_API })
+
+export const countTotalUsers = () => ({ type: COUNT_TOTAL_USERS })

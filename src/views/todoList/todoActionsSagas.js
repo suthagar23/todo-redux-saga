@@ -10,7 +10,7 @@ function* fetchTodoFromApi() {
   const email = response && response.data && response.data.email;
   yield delay(1000)
   yield put({ type: ADD_TODO,  payload: { title: email, id: uuid.v4() }});
-  yield put({ type: FETCHED_TODO_FROM_API,  payload: { title: email, id: uuid.v4() }});
+  yield put({ type: FETCHED_TODO_FROM_API });
 }
 
 export default function* todoActionWatcher() {
