@@ -1,3 +1,5 @@
+
+import { List, Map } from 'immutable';
 import {
   TODO_TITLE_REQUIRED,
   ADD_TODO,
@@ -6,51 +8,34 @@ import {
   SET_TOTAL_USERS,
   COUNT_TOTAL_USERS } from './constants';
 
-const INITIAL_STATE = {
-  todos: [],
+const INITIAL_STATE = Map({
+  todos: List(),
   addToDoError: false,
   isFetching: false,
   totalUsers: 1,
   isCountingUsers: false,
-};
+});
 
 export default (state = INITIAL_STATE, action) => {
   switch(action.type) {
     case TODO_TITLE_REQUIRED:
-        return {
-          ...state,
-          addToDoError: true,
-        };
+      return state.set('addToDoError', true)
     case ADD_TODO:
-        return {
-          ...state,
-          addToDoError: null,
-          todos: [
-            ...state.todos,
-            action.payload,
-          ]
-        };
+      return state
+      .set('addToDoError', null)
+      .updateIn(['todos'], arr => arr.push(action.payload))
     case FETCH_TODO_FROM_API:
-      return {
-        ...state,
-        isFetching: true
-      }
+      return state
+      .set('isFetching', true)
+      .set('addToDoError', null)
     case FETCHED_TODO_FROM_API:
-      return {
-        ...state,
-        isFetching: false
-      }
+      return state.set('isFetching', false)
     case SET_TOTAL_USERS:
-      return {
-        ...state,
-        totalUsers: action.payload.count,
-        isCountingUsers: false,
-      }
+        return state
+        .set('totalUsers', action.payload.count)
+        .set('isCountingUsers', false)
     case COUNT_TOTAL_USERS:
-      return {
-        ...state,
-        isCountingUsers: true,
-      }
+      return state.set('isCountingUsers', true)
     default:
         return state;
   }  

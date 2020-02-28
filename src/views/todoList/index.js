@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addToDo, addToDoFromApi, countTotalUsers } from './actions';
+import {
+  getToDosState,
+  getAddToDoErrorState,
+  getSsFetchingState,
+} from './selectors';
+import {
+  makeGetTotalUsersState,
+  makeGetIsCountingUsersState
+} from '../../selectors/usersSelectors';
 
 class Todo extends Component {
   constructor() {
@@ -67,13 +76,17 @@ class Todo extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { todos, addToDoError, isFetching, totalUsers, isCountingUsers } = state.todoList;
+  const toDoListState = state.todoList.toJS();
+
+  const getTotalUsersState = makeGetTotalUsersState();
+  const getIsCountingUsersState = makeGetIsCountingUsersState();
+
   return { 
-    todos,
-    addToDoError,
-    isFetching,
-    totalUsers,
-    isCountingUsers
+    todos: getToDosState(toDoListState),
+    addToDoError: getAddToDoErrorState(toDoListState),
+    isFetching: getSsFetchingState(toDoListState),
+    totalUsers: getTotalUsersState(toDoListState),
+    isCountingUsers: getIsCountingUsersState(toDoListState),
   };
 };
 
