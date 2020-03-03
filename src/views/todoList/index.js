@@ -51,7 +51,7 @@ class Todo extends Component {
     const { apiError } = this.state;
     return (
       <div className="content">
-        {totalUsers && (
+        {(isCountingUsers && !totalUsers || !isCountingUsers && totalUsers) && (
           <b> Total Users : {isCountingUsers ? "Fetching..." : totalUsers} </b>
         )}
         <div className="row">
@@ -66,8 +66,8 @@ class Todo extends Component {
         {addToDoError && (<b> Please enter title </b>)}
         {isFetching && (<b>Fetching...</b>)}
         <div className="addToDoBox">
-          <input onChange={this.onTitleChange} type="text" />
-          <button onClick={this.onClickAddToDo}>Add</button>
+          <input className="todoText" onChange={this.onTitleChange} type="text" />
+          <button className="addToDoButton" onClick={this.onClickAddToDo}>Add</button>
           <button onClick={this.onClickAddFromApi}>Add from API</button>
         </div>
       </div>

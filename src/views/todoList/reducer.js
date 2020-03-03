@@ -12,7 +12,7 @@ const INITIAL_STATE = Map({
   todos: List(),
   addToDoError: false,
   isFetching: false,
-  totalUsers: 1,
+  totalUsers: null,
   isCountingUsers: false,
 });
 
