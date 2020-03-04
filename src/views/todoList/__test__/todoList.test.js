@@ -4,7 +4,6 @@ import setupTests from "../../../__test__/setupTests";
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux';
 import TodoRedux from '../index';
-import reducer from '../reducer';
 import { List, Map } from 'immutable';
 
 setupTests();
@@ -57,33 +56,30 @@ describe('ToDo tests', () => {
   });
 
   it('Test OnClick AddTodo without text should show Title required', () => {
-    const { store, wrapper, initialState } = prepareWrapper({}, { addToDo: jest.fn()})
+    const { store, wrapper } = prepareWrapper({}, { addToDo: jest.fn()})
     expect(wrapper).toBeDefined();
 
     expect(wrapper.contains(<b> Please enter title </b>)).toBe(false)
    
     store.clearActions();
-    const expectedPayload = { type: 'TODO_TITLE_REQUIRED', payload: { title: '' } }
     wrapper.find(".addToDoButton").simulate("click");
-    expect(store.getActions()).toContainEqual(expectedPayload);
 
-    const updatedState = reducer(initialState, expectedPayload)
-    const { wrapper: updatedWrapper } = prepareWrapper({ todoList: updatedState.toJS() })
-    expect(updatedWrapper).toBeDefined();
-    
-    expect(updatedWrapper.contains(<b> Please enter title </b>)).toBe(true)
-  
+    expect(store.getActions().length).toBe(1)
+    const lastAction = store.getActions()[0]
+    const expectedAction = { type: 'TODO_TITLE_REQUIRED', payload: { title: '' } }
+    expect(lastAction.type).toBe(expectedAction.type)
+    expect(lastAction.payload.title).toBe(expectedAction.payload.title)
+
   });
 
   it('Test OnClick AddTodo with text should not show Title required', () => {
-    const { store, wrapper, initialState } = prepareWrapper({ todoList: { addToDoError: true }}, { addToDo: jest.fn()})
+    const { store, wrapper } = prepareWrapper({ todoList: { addToDoError: true }}, { addToDo: jest.fn()})
     expect(wrapper).toBeDefined();
 
     expect(wrapper.contains(<b> Please enter title </b>)).toBe(true)
    
     store.clearActions();
     expect(store.getActions().length).toBe(0)
-    const expectedAction = { type: 'ADD_TO_DO', payload: { title: 'Foo', id: '1234' } }
     const input = wrapper.find('input')
     input.simulate('focus');
     input.simulate('change', { target: { value: 'Foo' } });
@@ -91,20 +87,13 @@ describe('ToDo tests', () => {
 
     expect(store.getActions().length).toBe(1)
     const lastAction = store.getActions()[0]
+    const expectedAction = { type: 'ADD_TO_DO', payload: { title: 'Foo', id: '1234' } }
     expect(lastAction.type).toBe(expectedAction.type)
     expect(lastAction.payload.title).toBe(expectedAction.payload.title)
-   
-    const updatedState = reducer(initialState, expectedAction)
-    const { wrapper: updatedWrapper } = prepareWrapper({ todoList: updatedState.toJS() })
-    expect(updatedWrapper).toBeDefined();
-    
-    expect(updatedWrapper.contains(<b> Please enter title </b>)).toBe(false)
-  
-
   });
 
   it('Test OnClick AddTodo with text should add new ToDo to list', () => {
-    const { store, wrapper, initialState } = prepareWrapper({}, { addToDo: jest.fn()})
+    const { store, wrapper } = prepareWrapper({}, { addToDo: jest.fn()})
     expect(wrapper).toBeDefined();
 
     expect(wrapper.contains(<b> Please enter title </b>)).toBe(false)
@@ -112,7 +101,6 @@ describe('ToDo tests', () => {
 
     store.clearActions();
     expect(store.getActions().length).toBe(0)
-    const expectedAction = { type: 'ADD_TO_DO', payload: { title: 'Foo', id: '1234' } }
     const input = wrapper.find('input')
     input.simulate('focus');
     input.simulate('change', { target: { value: 'Foo' } });
@@ -120,14 +108,8 @@ describe('ToDo tests', () => {
 
     expect(store.getActions().length).toBe(1)
     const lastAction = store.getActions()[0]
+    const expectedAction = { type: 'ADD_TO_DO', payload: { title: 'Foo', id: '1234' } }
     expect(lastAction.type).toBe(expectedAction.type)
     expect(lastAction.payload.title).toBe(expectedAction.payload.title)
-
-    const updatedState = reducer(initialState, expectedAction)
-    const { wrapper: updatedWrapper } = prepareWrapper({ todoList: updatedState.toJS() })
-    expect(updatedWrapper).toBeDefined();
-    
-    expect(updatedWrapper.contains(<li>Foo</li>)).toBe(true)
-  
   });
 });
